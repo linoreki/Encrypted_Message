@@ -55,7 +55,7 @@ def receive_messages():
 
             decrypted_message = decryptor.update(encrypted_message) + decryptor.finalize()
             unpadded_message = unpadder.update(decrypted_message) + unpadder.finalize()
-            print(f"Server: {unpadded_message.decode()}")
+            print(f"{unpadded_message.decode()}")
 
         except Exception as e:
             print(f"Error receiving message: {e}")
@@ -63,14 +63,16 @@ def receive_messages():
             break
 
 def send_messages():
+    nickname = input("Choose a nickname: ")
     while True:
         try:
             aes_cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv))
             encryptor = aes_cipher.encryptor()
             padder = sym_padding.PKCS7(algorithms.AES.block_size).padder()
 
-            message = input("")
-            padded_message = padder.update(message.encode()) + padder.finalize()
+            message = input(f"{nickname}: ")
+            formatted_message = f"{nickname}: {message}"
+            padded_message = padder.update(formatted_message.encode()) + padder.finalize()
             encrypted_message = encryptor.update(padded_message) + encryptor.finalize()
             client.send(encrypted_message)
 

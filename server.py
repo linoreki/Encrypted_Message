@@ -1,5 +1,4 @@
 import socket
-import sys
 import threading
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -32,10 +31,15 @@ server.listen()
 
 clients = []
 
-def broadcast(message, _client):
+def broadcast(message, sender_client):
     for client in clients:
-        if client != _client:
-            client.send(message)
+        if client != sender_client:
+            try:
+                client.send(message)
+            except Exception as e:
+                print(f"Error broadcasting message to client: {e}")
+                client.close()
+                clients.remove(client)
 
 def handle_client(client):
     try:
@@ -66,14 +70,16 @@ def handle_client(client):
             decrypted_message = decryptor.update(encrypted_message) + decryptor.finalize()
             unpadded_message = unpadder.update(decrypted_message) + unpadder.finalize()
 
-            print(f"Received: {unpadded_message.decode()}")
+            message_text = unpadded_message.decode()
+            print(f"Received: {message_text}")
 
             # Reenviar mensaje a otros clientes
             broadcast(encrypted_message, client)
     except Exception as e:
         print(f"Error handling client: {e}")
     finally:
-        clients.remove(client)
+        if client in clients:
+            clients.remove(client)
         client.close()
 
 def receive_connections():

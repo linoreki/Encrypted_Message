@@ -22,6 +22,13 @@ def generateKeyPair():
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ))
 
+def load_private_key():
+    with open("server_private_key.pem", "rb") as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None
+        )
+    return private_key
 
 if __name__ == "__main__":
     generateKeyPair()

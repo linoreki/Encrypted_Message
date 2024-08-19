@@ -1,7 +1,7 @@
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 
-def generateKeyPair():
+def generate_key_pair():
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=2048,
@@ -22,14 +22,6 @@ def generateKeyPair():
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ))
 
-def load_private_key():
-    with open("server_private_key.pem", "rb") as key_file:
-        private_key = serialization.load_pem_private_key(
-            key_file.read(),
-            password=None
-        )
-    return private_key
-
 if __name__ == "__main__":
-    generateKeyPair()
-    print("Successfully created keypair")
+    generate_key_pair()
+    print("Successfully created key pair")

@@ -4,11 +4,20 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
+import Key_Generate
 
-with open("server_public_key.pem", "rb") as key_file:
-    public_key = serialization.load_pem_public_key(
-        key_file.read()
-    )
+try:
+    with open("server_public_key.pem", "rb") as key_file:
+        public_key = serialization.load_pem_public_key(
+            key_file.read()
+        )
+except FileNotFoundError:
+    Key_Generate.generateKeyPair()
+    with open("server_public_key.pem", "rb") as key_file:
+        public_key = serialization.load_pem_public_key(
+            key_file.read()
+        )
+
 
 aes_key = os.urandom(32)  
 

@@ -1,4 +1,5 @@
 import socket
+import sys
 import threading
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -24,6 +25,10 @@ server.bind(('localhost', 5555))
 server.listen()
 
 clients = []
+
+def def_handler(sig, frame):
+    print("\n\n[!] Saliendo...\n")
+    sys.exit(1)
 
 def broadcast(message, _client):
     for client in clients:

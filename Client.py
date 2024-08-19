@@ -1,3 +1,4 @@
+import sys
 import socket
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -38,6 +39,10 @@ client.send(encrypted_aes_key)
 aes_cipher = Cipher(algorithms.AES(aes_key), modes.ECB())
 encryptor = aes_cipher.encryptor()
 
+def def_handler(sig, frame):
+    print("\n\n[!] Saliendo...\n")
+    sys.exit(1)
+    
 def receive_messages():
     while True:
         try:

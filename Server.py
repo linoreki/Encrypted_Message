@@ -4,12 +4,20 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import Key_Generate
 
-with open("server_private_key.pem", "rb") as key_file:
-    private_key = serialization.load_pem_private_key(
-        key_file.read(),
-        password=None,
-    )
+try:
+    with open("server_public_key.pem", "rb") as key_file:
+        public_key = serialization.load_pem_public_key(
+            key_file.read()
+        )
+except FileNotFoundError:
+    Key_Generate.generateKeyPair()
+    with open("server_public_key.pem", "rb") as key_file:
+        public_key = serialization.load_pem_public_key(
+            key_file.read()
+        )
+
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('localhost', 5555))

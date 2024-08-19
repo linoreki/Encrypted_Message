@@ -5,30 +5,32 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding as sym_padding
+import os
 import gen_key
 
+HOST = '127.0.0.1'
+PORT = 65432
+
 try:
-    with open("server_public_key.pem", "rb") as key_file:
-        public_key = serialization.load_pem_public_key(
-            key_file.read()
+    with open("server_private_key.pem", "rb") as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None
         )
 except FileNotFoundError:
     gen_key.generateKeyPair()
-    with open("server_public_key.pem", "rb") as key_file:
-        public_key = serialization.load_pem_public_key(
-            key_file.read()
+    with open("server_private_key.pem", "rb") as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None
         )
 
-
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('localhost', 5555))
+server.bind((HOST, PORT))
 server.listen()
 
 clients = []
-
-def def_handler(sig, frame):
-    print("\n\n[!] Saliendo...\n")
-    sys.exit(1)
 
 def broadcast(message, _client):
     for client in clients:
@@ -36,31 +38,43 @@ def broadcast(message, _client):
             client.send(message)
 
 def handle_client(client):
-    while True:
-        try:
-            encrypted_aes_key = client.recv(256)
-            aes_key = private_key.decrypt(
-                encrypted_aes_key,
-                padding.OAEP(
-                    mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                    algorithm=hashes.SHA256(),
-                    label=None
-                )
+    try:
+        # Recibir la clave AES encriptada
+        encrypted_aes_key = client.recv(256)
+        aes_key = private_key.decrypt(
+            encrypted_aes_key,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
             )
+        )
 
-            # Now we can use the AES key for further communication
-            aes_cipher = Cipher(algorithms.AES(aes_key), modes.ECB())
+        # Recibir IV
+        iv = client.recv(16)
+
+        while True:
+            # Recibir mensaje encriptado
+            encrypted_message = client.recv(1024)
+            if not encrypted_message:
+                break
+
+            aes_cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv))
             decryptor = aes_cipher.decryptor()
+            unpadder = sym_padding.PKCS7(algorithms.AES.block_size).unpadder()
 
-            while True:
-                encrypted_message = client.recv(1024)
-                decrypted_message = decryptor.update(encrypted_message)
-                print(f"Received: {decrypted_message.decode()}")
-                broadcast(encrypted_message, client)
-        except:
-            clients.remove(client)
-            client.close()
-            break
+            decrypted_message = decryptor.update(encrypted_message) + decryptor.finalize()
+            unpadded_message = unpadder.update(decrypted_message) + unpadder.finalize()
+
+            print(f"Received: {unpadded_message.decode()}")
+
+            # Reenviar mensaje a otros clientes
+            broadcast(encrypted_message, client)
+    except Exception as e:
+        print(f"Error handling client: {e}")
+    finally:
+        clients.remove(client)
+        client.close()
 
 def receive_connections():
     while True:

@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
-import Key_Generate
+import gen_key
 
 try:
     with open("server_public_key.pem", "rb") as key_file:
@@ -13,7 +13,7 @@ try:
             key_file.read()
         )
 except FileNotFoundError:
-    Key_Generate.generateKeyPair()
+    gen_key.generateKeyPair()
     with open("server_public_key.pem", "rb") as key_file:
         public_key = serialization.load_pem_public_key(
             key_file.read()

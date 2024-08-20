@@ -6,6 +6,13 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding as pad
+import sys
+
+host = "127.0.0.1"
+
+if len(sys.argv) == 2:
+    host = sys.argv[1]
+
 
 # Load server's public key
 def load_server_public_key():

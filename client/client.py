@@ -1,6 +1,10 @@
 import socket
 import threading
+import sys
 
+host = '127.0.0.1'
+if len(sys.argv) == 2:
+    host = sys.argv[1]
 # Connect to Server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(('127.0.0.1', 5555))

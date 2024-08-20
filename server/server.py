@@ -1,37 +1,49 @@
 import socket
 import threading
 
-# Server Settings
 host = '0.0.0.0'
 port = 5555
 
-# Start Server
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
 server.listen()
 
 clients = []
+nicknames = {}
 
-# Broadcast Messages to All Connected Clients
-def broadcast(message):
+def broadcast(message, sender_socket=None):
     for client in clients:
-        client.send(message)
+        if client != sender_socket:  
+            client.send(message)
 
-# Handle Individual Client Connections
 def handle_client(client_socket, client_address):
     print(f"Connected with {client_address}")
     clients.append(client_socket)
 
+    nickname = client_socket.recv(256).decode('utf-8')
+    nicknames[client_socket] = nickname
+
     while True:
         try:
-            message = client_socket.recv(256)
-            broadcast(f"{client_address[0]}: {message.decode('utf-8')}".encode('utf-8'))
+            message = client_socket.recv(4096)
+            if message.startswith(b'FILE'):
+                _, filename, file_size = message.decode('utf-8').split(':')
+                file_size = int(file_size)
+                broadcast(message, client_socket)
+                while file_size > 0:
+                    data = client_socket.recv(4096)
+                    broadcast(data, client_socket)
+                    file_size -= len(data)
+                print(f"File {filename} received and broadcasted.")
+            else:
+                broadcast(message)
         except:
             clients.remove(client_socket)
             client_socket.close()
+            nickname = nicknames.pop(client_socket, "Unknown")
+            print(f"{nickname} disconnected")
             break
 
-# Main Receive Loop
 def receive():
     while True:
         client_socket, client_address = server.accept()

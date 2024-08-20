@@ -3,6 +3,8 @@ import threading
 import sys
 
 host = '127.0.0.1'
+nickname = input("\nPlease enter your nickname: ")
+
 if len(sys.argv) == 2:
     host = sys.argv[1]
 # Connect to Server
@@ -23,7 +25,7 @@ def receive():
 # Sending Messages to Server
 def write():
     while True:
-        message = input('')
+        message = input(f'{nickname}')
         client.send(message.encode('utf-8'))
 
 # Start Threads for Listening and Writing

@@ -1,27 +1,26 @@
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+# gen_key.py
+from Crypto.PublicKey import RSA
 
-def generate_key_pair():
-    private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-    )
+def generate_rsa_keys():
+    key = RSA.generate(3072)
+    return key
 
-    with open("server_private_key.pem", "wb") as f:
-        f.write(private_key.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.NoEncryption()
-        ))
+def save_key(key, file_path):
+    with open(file_path, "wb") as key_file:
+        key_file.write(key.export_key())
 
-    public_key = private_key.public_key()
+def main():
+    # Generate server keys
+    server_key = generate_rsa_keys()
+    save_key(server_key, "server/key_private.pem")
+    save_key(server_key.public_key(), "server/key_public.pem")
 
-    with open("server_public_key.pem", "wb") as f:
-        f.write(public_key.public_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
-        ))
+    # Generate client keys
+    client_key = generate_rsa_keys()
+    save_key(client_key, "client/key_private.pem")
+    save_key(client_key.public_key(), "client/key_public.pem")
+
+    print("Keys generated and saved successfully.")
 
 if __name__ == "__main__":
-    generate_key_pair()
-    print("Successfully created key pair")
+    main()

@@ -7,11 +7,10 @@ nickname = input("\nPlease enter your nickname: ")
 
 if len(sys.argv) == 2:
     host = sys.argv[1]
-# Connect to Server
+
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, 5555))
 
-# Listening to Server
 def receive():
     while True:
         try:
@@ -22,13 +21,11 @@ def receive():
             client.close()
             break
 
-# Sending Messages to Server
 def write():
     while True:
-        message = input(f'{nickname}: ')
-        client.send(message.encode('utf-8'))
+        message = input('You: ')
+        client.send(f"{nickname}: {message}".encode('utf-8'))
 
-# Start Threads for Listening and Writing
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()
 

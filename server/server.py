@@ -11,9 +11,10 @@ server.listen()
 clients = []
 nicknames = {}
 
-def broadcast(message):
+def broadcast(message, sender_socket=None):
     for client in clients:
-        client.send(message)
+        if client != sender_socket:  
+            client.send(message)
 
 def handle_client(client_socket, client_address):
     print(f"Connected with {client_address}")
@@ -24,8 +25,18 @@ def handle_client(client_socket, client_address):
 
     while True:
         try:
-            message = client_socket.recv(256)
-            broadcast(message)
+            message = client_socket.recv(4096)
+            if message.startswith(b'FILE'):
+                _, filename, file_size = message.decode('utf-8').split(':')
+                file_size = int(file_size)
+                broadcast(message, client_socket)
+                while file_size > 0:
+                    data = client_socket.recv(4096)
+                    broadcast(data, client_socket)
+                    file_size -= len(data)
+                print(f"File {filename} received and broadcasted.")
+            else:
+                broadcast(message)
         except:
             clients.remove(client_socket)
             client_socket.close()

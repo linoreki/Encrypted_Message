@@ -60,7 +60,7 @@ bash
 ```
 python client.py [IP_del_servidor]
 ```
-Si no especificas la IP, se usará 192.168.8.22 por defecto.
+Si no especificas la IP, se usará 127.0.0.1 por defecto.
 
 - 5. Probar Encriptación/Desencriptación
 Puedes probar el proceso de encriptación y desencriptación con el script test.py:

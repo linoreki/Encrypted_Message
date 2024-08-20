@@ -53,7 +53,7 @@ nickname = input("Choose your nickname: ")
 server_public_key = load_server_public_key()
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 5555))
+client.connect((host, 5555))
 
 # Send nickname to server
 client.send(nickname.encode('ascii'))

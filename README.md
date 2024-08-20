@@ -31,8 +31,8 @@ pip install pycryptodome
 - 1. Generación de Claves
 Primero, genera las claves RSA para el servidor y los clientes:
 
-bash
-```
+
+```bash
 python gen_key.py
 ```
 Esto generará las siguientes claves:
@@ -42,22 +42,22 @@ Claves del cliente: client/key_private.pem y client/key_public.pem
 - 2. Añadir Claves Públicas Autorizadas
 Para autorizar a un cliente, añade su clave pública al archivo de claves permitidas en el servidor:
 
-bash
-```
+
+```bash
 python server/add_key.py client/key_public.pem server/allowed_keys.txt
 ```
 - 3. Ejecutar el Servidor
 Inicia el servidor para escuchar conexiones entrantes:
 
-bash
-```
+
+```bash
 python server.py
 ```
 - 4. Conectar el Cliente
 Inicia un cliente y conéctalo al servidor:
 
-bash
-```
+
+```bash
 python client.py [IP_del_servidor]
 ```
 Si no especificas la IP, se usará 127.0.0.1 por defecto.
@@ -65,11 +65,21 @@ Si no especificas la IP, se usará 127.0.0.1 por defecto.
 - 5. Probar Encriptación/Desencriptación
 Puedes probar el proceso de encriptación y desencriptación con el script test.py:
 
-bash
-```
+
+```bash
 python test.py
 ```
 Esto verificará que los mensajes pueden ser encriptados y desencriptados correctamente usando las claves generadas.
+
+## Funciones
+
+- 1. Mandar archivos de hasta 4kb.
+
+```bash
+/sendfile {Ruta_Del_Archivo}
+```
+
+
 
 Notas
 Asegúrate de que el servidor y los clientes utilicen las claves correctas para la encriptación y desencriptación de mensajes.

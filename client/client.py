@@ -25,7 +25,7 @@ def receive():
 # Sending Messages to Server
 def write():
     while True:
-        message = input(f'{nickname}')
+        message = input(f'{nickname}: ')
         client.send(message.encode('utf-8'))
 
 # Start Threads for Listening and Writing

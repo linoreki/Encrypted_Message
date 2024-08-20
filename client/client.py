@@ -66,8 +66,8 @@ def write():
 def send_file(file_path):
     try:
         file_size = os.path.getsize(file_path)
-        if file_size > 10 * 1024 * 1024:  # 10 MB limit
-            print(Fore.RED + "File size exceeds the 10MB limit.")
+        if file_size > 4 * 1024:  # 4kb limit
+            print(Fore.RED + "File size exceeds the 4kb limit.")
             return
 
         filename = os.path.basename(file_path)

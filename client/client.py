@@ -34,12 +34,12 @@ def receive():
 
 def write():
     while True:
-        message = input(f'You: ')
+        message = input('\n')
         if message.startswith("/sendfile"):
             _, file_path = message.split(' ', 1)
             send_file(file_path)
         else:
-            client.send(f"{nickname}: {message}".encode('utf-8'))
+            client.send(f"\n{nickname}: {message}".encode('utf-8'))
 
 def send_file(file_path):
     try:

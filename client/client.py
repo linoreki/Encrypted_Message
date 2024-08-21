@@ -8,7 +8,7 @@ from colorama import Fore, Style
 
 colorama.init(autoreset=True)
 
-host = '192.168.8.22'
+host = '172.0.0.1'
 nickname = input(Fore.GREEN + "\nPlease enter your nickname: ")
 
 if len(sys.argv) == 2:

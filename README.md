@@ -1,92 +1,98 @@
 # Encrypted_Message
 
-Encrypted_Message es un sistema de mensajería simple que utiliza sockets para la comunicación entre un cliente y un servidor. Además, el proyecto incluye la generación y gestión de claves RSA para asegurar la comunicación.
+Encrypted_Message is a simple messaging system that uses sockets for communication between a client and a server. This project also includes RSA key generation and management to secure the communication.
 
-## Características
+## Features
 
-- Comunicación cliente-servidor usando sockets TCP.
-- Generación de claves RSA para encriptación y desencriptación de mensajes.
-- Soporte para múltiples clientes conectados simultáneamente.
-- Sistema de administración de claves públicas autorizadas.
+- Client-server communication using TCP sockets.
+- RSA key generation for encrypting and decrypting messages.
+- Support for multiple clients connected simultaneously.
+- Management system for authorized public keys.
 
-## Estructura del Proyecto
+## Project Structure
 
-- `client.py`: Código del cliente que se conecta al servidor, envía y recibe mensajes.
-- `server.py`: Código del servidor que maneja las conexiones de los clientes y transmite los mensajes entre ellos.
-- `gen_key.py`: Script para generar las claves RSA para el servidor y los clientes.
-- `add_key.py`: Script para añadir claves públicas a un archivo de claves autorizadas en el servidor.
-- `test.py`: Script de prueba para verificar la funcionalidad de encriptación y desencriptación utilizando las claves generadas.
+- `client.py`: Client code that connects to the server, sends, and receives messages.
+- `server.py`: Server code that handles client connections and relays messages between them.
+- `gen_key.py`: Script to generate RSA keys for the server and clients.
+- `add_key.py`: Script to add public keys to the server's authorized keys file.
+- `test.py`: Test script to verify encryption and decryption functionality using the generated keys.
 
-## Requisitos
+## Requirements
 
 - Python 3.x
-- Librería `pycryptodome` para la generación y manejo de claves RSA.
+- `pycryptodome` library for RSA key generation and management.
 
-Puedes instalar la librería necesaria con:
+You can install the required library with:
 
 ```bash
 pip install pycryptodome
 ```
-## Configuración y Uso
-- 1. Generación de Claves
-Primero, genera las claves RSA para el servidor y los clientes:
 
+## Setup and Usage
 
-```bash
-python gen_key.py
-```
-Esto generará las siguientes claves:
+1. **Generate RSA Keys**
+   First, generate RSA keys for the server and clients:
 
-Claves del servidor: server/key_private.pem y server/key_public.pem
-Claves del cliente: client/key_private.pem y client/key_public.pem
-- 2. Añadir Claves Públicas Autorizadas
-Para autorizar a un cliente, añade su clave pública al archivo de claves permitidas en el servidor:
+   ```bash
+   python gen_key.py
+   ```
 
+   This will generate the following keys:
 
-```bash
-python server/add_key.py client/key_public.pem server/allowed_keys.txt
-```
-- 3. Ejecutar el Servidor
-Inicia el servidor para escuchar conexiones entrantes:
+   - Server keys: `server/key_private.pem` and `server/key_public.pem`
+   - Client keys: `client/key_private.pem` and `client/key_public.pem`
 
+2. **Add Authorized Public Keys**
+   To authorize a client, add its public key to the server's list of allowed keys:
 
-```bash
-python server.py
-```
-- 4. Conectar el Cliente
-Inicia un cliente y conéctalo al servidor:
+   ```bash
+   python server/add_key.py client/key_public.pem server/allowed_keys.txt
+   ```
 
+3. **Run the Server**
+   Start the server to listen for incoming connections:
 
-```bash
-python client.py [IP_del_servidor]
-```
-Si no especificas la IP, se usará 127.0.0.1 por defecto.
+   ```bash
+   python server.py
+   ```
 
-- 5. Probar Encriptación/Desencriptación
-Puedes probar el proceso de encriptación y desencriptación con el script test.py:
+4. **Connect a Client**
+   Start a client and connect it to the server:
 
+   ```bash
+   python client.py [Server_IP_Address]
+   ```
 
-```bash
-python test.py
-```
-Esto verificará que los mensajes pueden ser encriptados y desencriptados correctamente usando las claves generadas.
+   If no IP address is specified, `127.0.0.1` (localhost) will be used by default.
 
-## Funciones
+5. **Test Encryption/Decryption**
+   You can test the encryption and decryption process using the `test.py` script:
 
-- 1. Mandar archivos de hasta 4kb.
+   ```bash
+   python test.py
+   ```
 
-```bash
-/sendfile {Ruta_Del_Archivo}
-```
+   This will verify that messages can be correctly encrypted and decrypted using the generated keys.
 
+## Additional Features
 
+- **Send Files Up to 4KB**
 
-Notas
-Asegúrate de que el servidor y los clientes utilicen las claves correctas para la encriptación y desencriptación de mensajes.
-En este proyecto, los mensajes no están encriptados por defecto en la comunicación cliente-servidor. Puedes extender el código para integrar la encriptación RSA en la transmisión de mensajes.
-Licencia
+   To send a file (up to 4KB), use the following command:
 
-Este proyecto es de código abierto bajo la licencia MIT. Siéntete libre de modificar y mejorar el código.
+   ```bash
+   /sendfile {File_Path}
+   ```
 
-## Contribuciones
-¡Las contribuciones son bienvenidas! Si deseas mejorar el proyecto, no dudes en abrir un issue o enviar un pull request.
+## Notes
+
+- Ensure that the server and clients use the correct keys for message encryption and decryption.
+- By default, messages are not encrypted during client-server communication. You can extend the code to integrate RSA encryption into the message transmission.
+
+## License
+
+This project is open-source and available under the MIT License. Feel free to modify and enhance the code.
+
+## Contributions
+
+Contributions are welcome! If you would like to improve the project, feel free to open an issue or submit a pull request.

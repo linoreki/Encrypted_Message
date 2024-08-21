@@ -1,4 +1,6 @@
 *.pem
 __pycache__
-server/key_private.pem
-client/key_private.pem
+server/*.pem
+client/*.pem
+server/allowed_keys.txt
+

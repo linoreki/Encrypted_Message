@@ -13,20 +13,23 @@ nicknames = {}
 
 def broadcast(message, sender_socket=None):
     for client in clients:
-        if client != sender_socket:  
+        if client != sender_socket:  # Do not send the message to the sender
             client.send(message)
 
 def handle_client(client_socket, client_address):
     print(f"Connected with {client_address}")
     clients.append(client_socket)
 
+    # Receive and store the nickname
     nickname = client_socket.recv(256).decode('utf-8')
     nicknames[client_socket] = nickname
+    print(f"Nickname: {nickname}")
 
     while True:
         try:
             message = client_socket.recv(4096)
             if message.startswith(b'FILE'):
+                # File transfer handling
                 _, filename, file_size = message.decode('utf-8').split(':')
                 file_size = int(file_size)
                 broadcast(message, client_socket)
@@ -36,7 +39,8 @@ def handle_client(client_socket, client_address):
                     file_size -= len(data)
                 print(f"File {filename} received and broadcasted.")
             else:
-                broadcast(message)
+                # Text message broadcasting
+                broadcast(message, client_socket)
         except:
             clients.remove(client_socket)
             client_socket.close()

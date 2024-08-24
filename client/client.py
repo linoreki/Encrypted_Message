@@ -2,7 +2,6 @@ import socket
 import threading
 import sys
 import os
-import time
 import colorama
 from colorama import Fore, Style
 
@@ -16,6 +15,9 @@ if len(sys.argv) == 2:
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, 5555))
+
+# Send the nickname to the server immediately after connecting
+client.send(nickname.encode('utf-8'))
 
 def print_help():
     help_text = """

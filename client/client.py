@@ -2,9 +2,7 @@ import socket
 import threading
 import sys
 import os
-import time
-import colorama
-from colorama import Fore, Style
+from colorama import Fore
 
 colorama.init(autoreset=True)
 

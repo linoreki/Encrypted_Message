@@ -94,7 +94,7 @@ def send_file(file_path=None):
         messagebox.showerror("Error", f"Failed to send file {file_path}: {e}")
 
 def start_chat():
-    global app, chat_area, message_entry
+    global app, chat_area, message_entry, bg_color, fg_color, entry_bg_color, entry_bg_color, button_bg_color, button_fg_color
 
     app = ctk.CTk()
     app.title("Encrypted Chat Client")

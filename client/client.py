@@ -2,11 +2,11 @@ import socket
 import threading
 import sys
 import os
-from colorama import Fore
+from colorama import Fore, init
 
-colorama.init(autoreset=True)
+init(autoreset=True)
 
-host = '172.0.0.1'
+host = input(Fore.GREEN + "\nPlease enter the server IP adress: ")
 nickname = input(Fore.GREEN + "\nPlease enter your nickname: ")
 
 if len(sys.argv) == 2:
@@ -15,13 +15,12 @@ if len(sys.argv) == 2:
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, 5555))
 
-# Send the nickname to the server immediately after connecting
 client.send(nickname.encode('utf-8'))
 
 def print_help():
     help_text = """
     Available commands:
-    /sendfile <file_path>  - Send a file to the chat (max 4KB).
+    /sendfile <file_path>  - Send a file to the chat.
     /exit                  - Exit the chat.
     /help                  - Show this help message.
     """
@@ -35,11 +34,14 @@ def receive():
                 _, filename, file_size = header.split(':')
                 file_size = int(file_size)
                 print(Fore.BLUE + f"Receiving file: {filename} ({file_size} bytes)")
+                
+                # Recibir el archivo en fragmentos
                 with open(f"received_{filename}", "wb") as f:
                     while file_size > 0:
                         data = client.recv(min(file_size, 4096))
                         f.write(data)
                         file_size -= len(data)
+                
                 print(Fore.GREEN + f"File {filename} received successfully!")
             else:
                 print(Fore.CYAN + header)
@@ -67,17 +69,16 @@ def write():
 def send_file(file_path):
     try:
         file_size = os.path.getsize(file_path)
-        if file_size > 4 * 1024:  # 4kb limit
-            print(Fore.RED + "File size exceeds the 4kb limit.")
-            return
 
         filename = os.path.basename(file_path)
         client.send(f"FILE:{filename}:{file_size}".encode('utf-8'))
         print(Fore.YELLOW + f"Sending file: {filename} ({file_size} bytes)")
 
+        # Enviar el archivo en fragmentos de 4096 bytes
         with open(file_path, "rb") as f:
             while (data := f.read(4096)):
                 client.send(data)
+        
         print(Fore.GREEN + f"File {filename} sent successfully!")
     except FileNotFoundError:
         print(Fore.RED + f"File {file_path} not found.")

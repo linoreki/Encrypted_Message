@@ -106,17 +106,10 @@ def send_file(file_path=None):
 
 # Función para iniciar la ventana de chat
 def start_chat():
-    global app, chat_area, message_entry
+    global app, chat_area, message_entry, bg_color, fg_color, entry_bg_color, entry_bg_color, button_bg_color, button_fg_color
 
     app = tk.Tk()
     app.title("Encrypted Chat Client")
-    
-    # Colores del tema oscuro
-    bg_color = "#1c1c1c"        # Fondo oscuro
-    fg_color = "#ffffff"        # Texto claro
-    entry_bg_color = "#333333"  # Fondo de entradas
-    button_bg_color = "#444444" # Fondo de botones
-    button_fg_color = "#ffffff" # Texto de botones
 
     app.configure(bg=bg_color)
 

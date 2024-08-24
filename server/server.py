@@ -1,54 +1,59 @@
 import socket
 import threading
 
-host = '0.0.0.0'
-port = 5555
+def main():
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((host, port))
-server.listen()
+    host = '0.0.0.0'
+    port = 5555
 
-clients = []
-nicknames = {}
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((host, port))
+    server.listen()
 
-def broadcast(message, sender_socket=None):
-    for client in clients:
-        if client != sender_socket:  
-            client.send(message)
+    clients = []
+    nicknames = {}
 
-def handle_client(client_socket, client_address):
-    print(f"Connected with {client_address}")
-    clients.append(client_socket)
+    def broadcast(message, sender_socket=None):
+        for client in clients:
+            if client != sender_socket:  
+                client.send(message)
 
-    nickname = client_socket.recv(256).decode('utf-8')
-    nicknames[client_socket] = nickname
+    def handle_client(client_socket, client_address):
+        print(f"Connected with {client_address}")
+        clients.append(client_socket)
 
-    while True:
-        try:
-            message = client_socket.recv(4096)
-            if message.startswith(b'FILE'):
-                _, filename, file_size = message.decode('utf-8').split(':')
-                file_size = int(file_size)
-                broadcast(message, client_socket)
-                while file_size > 0:
-                    data = client_socket.recv(4096)
-                    broadcast(data, client_socket)
-                    file_size -= len(data)
-                print(f"File {filename} received and broadcasted.")
-            else:
-                broadcast(message)
-        except:
-            clients.remove(client_socket)
-            client_socket.close()
-            nickname = nicknames.pop(client_socket, "Unknown")
-            print(f"{nickname} disconnected")
-            break
+        nickname = client_socket.recv(256).decode('utf-8')
+        nicknames[client_socket] = nickname
 
-def receive():
-    while True:
-        client_socket, client_address = server.accept()
-        handle_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
-        handle_thread.start()
+        while True:
+            try:
+                message = client_socket.recv(4096)
+                if message.startswith(b'FILE'):
+                    _, filename, file_size = message.decode('utf-8').split(':')
+                    file_size = int(file_size)
+                    broadcast(message, client_socket)
+                    while file_size > 0:
+                        data = client_socket.recv(4096)
+                        broadcast(data, client_socket)
+                        file_size -= len(data)
+                    print(f"File {filename} received and broadcasted.")
+                else:
+                    broadcast(message)
+            except:
+                clients.remove(client_socket)
+                client_socket.close()
+                nickname = nicknames.pop(client_socket, "Unknown")
+                print(f"{nickname} disconnected")
+                break
 
-print("Server is listening...")
-receive()
+    def receive():
+        while True:
+            client_socket, client_address = server.accept()
+            handle_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
+            handle_thread.start()
+
+    print("Server is listening...")
+    receive()
+
+if __name__ == "__main__":
+    main()

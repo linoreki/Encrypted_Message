@@ -3,20 +3,8 @@ import threading
 import sys
 import os
 from colorama import Fore
+import colorama
 
-colorama.init(autoreset=True)
-
-host = '172.0.0.1'
-nickname = input(Fore.GREEN + "\nPlease enter your nickname: ")
-
-if len(sys.argv) == 2:
-    host = sys.argv[1]
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect((host, 5555))
-
-# Send the nickname to the server immediately after connecting
-client.send(nickname.encode('utf-8'))
 
 def print_help():
     help_text = """
@@ -48,7 +36,7 @@ def receive():
             client.close()
             break
 
-def write():
+def write(client):
     print_help()
     while True:
         message = input(f'{nickname}: ')
@@ -64,7 +52,7 @@ def write():
         else:
             client.send(f"{nickname}: {message}".encode('utf-8'))
 
-def send_file(file_path):
+def send_file(file_path, client):
     try:
         file_size = os.path.getsize(file_path)
         if file_size > 4 * 1024:  # 4kb limit
@@ -84,8 +72,28 @@ def send_file(file_path):
     except Exception as e:
         print(Fore.RED + f"Failed to send file {file_path}: {e}")
 
-receive_thread = threading.Thread(target=receive)
-receive_thread.start()
+def main():
 
-write_thread = threading.Thread(target=write)
-write_thread.start()
+    colorama.init(autoreset=True)
+
+    host = input("Enter the server's IP: ") 
+    print(host)
+    nickname = input(Fore.GREEN + "\nPlease enter your nickname: ")
+
+    if len(sys.argv) == 2:
+        host = sys.argv[1]
+
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, 5555))
+
+    # Send the nickname to the server immediately after connecting
+    client.send(nickname.encode('utf-8'))
+
+    receive_thread = threading.Thread(target=receive)
+    receive_thread.start()
+
+    write_thread = threading.Thread(target=write)
+    write_thread.start()
+
+if __name__ == "__main__":
+    main()

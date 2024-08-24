@@ -95,4 +95,4 @@ This project is open-source and available under the MIT License. Feel free to mo
 
 ## Contributions
 
-Contributions are welcome! If you would like to improve the project, feel free to open an issue or submit a pull request.
+Contributions are welcome! If you would like to improve the project, feel free to open an issue or submit a pull

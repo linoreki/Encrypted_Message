@@ -10,12 +10,13 @@ Encrypted_Message is a simple messaging system that uses sockets for communicati
 - Management system for authorized public keys.
 
 ## Project Structure
-
+- `clientGUI.py`: Client code that connects to the server, sends, and receives messages but with GUI.
 - `client.py`: Client code that connects to the server, sends, and receives messages.
 - `server.py`: Server code that handles client connections and relays messages between them.
 - `gen_key.py`: Script to generate RSA keys for the server and clients.
 - `add_key.py`: Script to add public keys to the server's authorized keys file.
 - `test.py`: Test script to verify encryption and decryption functionality using the generated keys.
+- `main.py`: Script to run all services in a GUI interface.
 
 ## Requirements
 
@@ -78,7 +79,7 @@ pip install pycryptodome
 
 - **Send Files**
 
-   To send a file (up to 4KB), use the following command:
+   To send a file, use the following command:
 
    ```bash
    /sendfile {File_Path}

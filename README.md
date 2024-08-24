@@ -76,7 +76,7 @@ pip install pycryptodome
 
 ## Additional Features
 
-- **Send Files Up to 4KB**
+- **Send Files**
 
    To send a file (up to 4KB), use the following command:
 

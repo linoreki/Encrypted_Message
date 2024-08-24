@@ -3,4 +3,5 @@ __pycache__
 server/*.pem
 client/*.pem
 server/allowed_keys.txt
+.venv
 

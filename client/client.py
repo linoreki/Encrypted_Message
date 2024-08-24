@@ -2,7 +2,6 @@ import socket
 import threading
 import sys
 import os
-import colorama
 from colorama import Fore
 
 colorama.init(autoreset=True)

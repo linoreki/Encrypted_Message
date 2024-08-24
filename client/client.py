@@ -2,9 +2,8 @@ import socket
 import threading
 import sys
 import os
-import time
-import colorama
-from colorama import Fore, Style
+import colorama 
+from colorama import Fore
 
 colorama.init(autoreset=True)
 
@@ -20,7 +19,7 @@ client.connect((host, 5555))
 def print_help():
     help_text = """
     Available commands:
-    /sendfile <file_path>  - Send a file to the chat (max 10MB).
+    /sendfile <file_path>  - Send a file to the chat (max 4KB).
     /exit                  - Exit the chat.
     /help                  - Show this help message.
     """

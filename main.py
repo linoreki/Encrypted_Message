@@ -1,9 +1,9 @@
 import threading
 import queue
 import customtkinter as ctk
-from server import server
-from client import client, clientGUI
-import test
+from Server import server
+from Client import client, clientGUI
+from Test import test
 import gen_key
 
 task_queue = queue.Queue()

@@ -21,15 +21,26 @@ Encrypted_Message is a simple messaging system that uses sockets for communicati
 ## Requirements
 
 - Python 3.x
-- `pycryptodome` library for RSA key generation and management.
 
 You can install the required library with:
 
 ```bash
-pip install pycryptodome
+python -m pip install -r requirements.txt
+```
+## Setup and Usage
+By using the main script you have a custom gui where you can executate easily all the functions.
+
+```bash
+   python main.py
 ```
 
-## Setup and Usage
+or if you are using windows:
+
+```bash
+   ./main.exe
+```
+
+## Setup and Usage manually
 
 1. **Generate RSA Keys**
    First, generate RSA keys for the server and clients:
@@ -58,11 +69,17 @@ pip install pycryptodome
    ```
 
 4. **Connect a Client**
-   Start a client and connect it to the server:
+   Start a clientGUI and connect it to the server:
 
-   ```bash
-   python client.py [Server_IP_Address]
+  ```bash
+   python clientGUI.py
    ```
+   and specifie the ip adress.   
+
+  ```bash
+   python client.py
+   ```
+   and specifie the ip adress.
 
    If no IP address is specified, `127.0.0.1` (localhost) will be used by default.
 

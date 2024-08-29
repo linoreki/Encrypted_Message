@@ -1,7 +1,7 @@
 import threading
 import queue
 import customtkinter as ctk
-from Server import server
+from Server import serverGUI
 from Client import client, clientGUI
 from Test import test
 import gen_key
@@ -11,7 +11,7 @@ task_queue = queue.Queue()
 def execute_option(option):
     try:
         if option == 'Server':
-            server.main()
+            serverGUI.main()
         elif option == 'Client':
             client.main()
         elif option == 'Client GUI':
